@@ -1,4 +1,4 @@
-﻿@page "/"
+﻿@* @page "/"
 @using frontend.ApiConnection
 @using frontend.Data
 
@@ -46,5 +46,40 @@ else
             // Handle the exception, e.g., log it or show an error message
             Console.WriteLine($"Error fetching movie data: {ex.Message}");
         }
+    }
+} *@
+@page "/"
+@using System.Reflection.Metadata.Ecma335
+@using frontend.ApiConnection
+@using frontend.Data
+
+<PageTitle>Index</PageTitle>
+<h1>Movies</h1>
+
+My movies watchlist.
+
+<SurveyPrompt Title="I hope this works" />
+
+@foreach (movie m in list)
+{
+    <div>
+        @m.title
+    </div>
+}
+
+@code
+{
+    List<movie> list = new();
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        GetMovies();
+    }
+
+    private async void GetMovies()
+    {
+        api handler = new();
+        list= await handler.GetMovies();
+        StateHasChanged();
     }
 }
