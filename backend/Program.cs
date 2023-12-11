@@ -28,9 +28,9 @@ internal class Program
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
 
-        services.AddScoped<Crud>(provider =>
+        services.AddScoped<MovieRepo>(provider =>
         {
-            return new Crud(GetConnectionString());
+            return new MovieRepo(GetConnectionString());
         });
 
         services.AddScoped<MovieController>();

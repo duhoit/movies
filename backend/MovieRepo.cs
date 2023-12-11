@@ -6,12 +6,12 @@ using Backend;
 
 namespace backend
 {
-    public class Crud
+    public class MovieRepo
     {
         private readonly string connectionString;
         private Connection con;
 
-        public Crud(string connectionString)
+        public MovieRepo(string connectionString)
         {
             this.connectionString = connectionString;
             con = new(this.connectionString);

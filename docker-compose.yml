@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  postgres:
+    build:
+      context: ./database
+    ports:
+      - "5432:5432"
+    networks:
+      - todonetwork
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      - DB_HOST=backend
+      #- DB_CONNECTION_STRING=Host=postgres;Port=5432;Database=movies;Username=psqlman;Password=Countdown10
+
+      - DB_CONNECTION_STRING=postgres://psqlman:Countdown10@postgres:5432/movies
+    ports:
+      - "9988:9988"
+    networks:
+      - todonetwork
+    depends_on:
+      - postgres
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    networks:
+      - todonetwork
+    depends_on:
+      - backend
+
+networks:
+  todonetwork:
+    driver: bridge
