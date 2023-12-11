@@ -1,15 +1,13 @@
 ﻿@page "/fetchdata"
 
-<PageTitle>Weather forecast</PageTitle>
+<PageTitle>Movie List</PageTitle>
 
 @using frontend.Data
-@inject WeatherForecastService ForecastService
+@inject frontend.ApiConnection.api api
 
-<h1>Weather forecast</h1>
+<h1>Movie List</h1>
 
-<p>This component demonstrates fetching data from a service.</p>
-
-@if (forecasts == null)
+@if (movies == null)
 {
     <p><em>Loading...</em></p>
 }
@@ -18,20 +16,20 @@ else
     <table class="table">
         <thead>
             <tr>
-                <th>Date</th>
-                <th>Temp. (C)</th>
-                <th>Temp. (F)</th>
-                <th>Summary</th>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Is Completed</th>
+                <th>Genre</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var forecast in forecasts)
+            @foreach (var movie in movies)
             {
                 <tr>
-                    <td>@forecast.Date.ToShortDateString()</td>
-                    <td>@forecast.TemperatureC</td>
-                    <td>@forecast.TemperatureF</td>
-                    <td>@forecast.Summary</td>
+                    <td>@movie.id</td>
+                    <td>@movie.title</td>
+                    <td>@movie.isCompleted</td>
+                    <td>@movie.genre</td>
                 </tr>
             }
         </tbody>
@@ -39,10 +37,10 @@ else
 }
 
 @code {
-    private WeatherForecast[]? forecasts;
+    private List<movie>? movies;
 
     protected override async Task OnInitializedAsync()
     {
-        forecasts = await ForecastService.GetForecastAsync(DateTime.Now);
+        movies = await api.GetMovies();
     }
 }

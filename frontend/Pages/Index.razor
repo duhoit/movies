@@ -1,9 +1,50 @@
 ﻿@page "/"
+@using frontend.ApiConnection
+@using frontend.Data
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Movies</h1>
 
-Welcome to your new app.
+My movies watchlist.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<SurveyPrompt Title="I hope this works" />
+
+@if (movies != null)
+{
+    @foreach (movie m in movies)
+    {
+        <div>
+            @m.title
+        </div>
+    }
+}
+else
+{
+    <p>Loading...</p>
+}
+
+@code {
+    private List<movie>? movies;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        GetMovieData();
+    }
+
+    private async void GetMovieData()
+    {
+        try
+        {
+            api handler = new();
+            movies = await handler.GetMovies();
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            // Handle the exception, e.g., log it or show an error message
+            Console.WriteLine($"Error fetching movie data: {ex.Message}");
+        }
+    }
+}
