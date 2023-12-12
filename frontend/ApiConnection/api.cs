@@ -15,6 +15,7 @@ namespace frontend.ApiConnection
                     client.Timeout = new(0,0,10);
                     var response= await client.GetAsync(Url+"/api/DB");
                     string json = await response.Content.ReadAsStringAsync();
+                    Console.WriteLine(json);
                     movie[] movies = Newtonsoft.Json.JsonConvert.DeserializeObject<movie[]>(json);
                     if (movies == null) return new();
                     return movies.ToList();

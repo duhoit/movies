@@ -4,6 +4,8 @@ services:
   postgres:
     build:
       context: ./database
+    environment:
+      POSTGRES_PASSWORD: "Countdown10"
     ports:
       - "5432:5432"
     networks:
@@ -18,7 +20,7 @@ services:
 
       #- DB_CONNECTION_STRING=postgres://psqlman:Countdown10@postgres:5432/movies
     ports:
-      - "9988:9988"
+      - "7280:7280"
     networks:
       - todonetwork
     depends_on:

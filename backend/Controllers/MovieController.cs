@@ -34,6 +34,8 @@ namespace backend.Controllers
         {
             movie.Id = movies.Count + 1;
             movies.Add(movie);
+            ActionResult<Movie> a = CreatedAtAction(nameof(Get), new { id = movie.Id }, movie);
+            Console.WriteLine(a);
             return CreatedAtAction(nameof(Get), new { id = movie.Id }, movie);
         }
 

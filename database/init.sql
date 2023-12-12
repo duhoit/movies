@@ -17,7 +17,7 @@ CREATE TABLE public."movie"
 (
     "id" text NOT NULL,
     "title" text,
-    "isCompleted" text,
+    "isCompleted" boolean,
     "genre" date,
     PRIMARY KEY ("Id")
 );

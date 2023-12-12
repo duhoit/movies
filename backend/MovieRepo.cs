@@ -17,13 +17,13 @@ namespace backend
             con = new(this.connectionString);
         }
 
-        public void CreateFood(Movie movie)
+        public void CreateMovie(Movie movie)
         {
             string sql = "INSERT INTO movie (title, genre, iscompleted) VALUES (@title, @genre, @iscompleted);";
             con.sqlCommand(sql, new { movie.title, movie.genre, movie.isCompleted}, connectionString);
         }
 
-        public void DeleteFood(int id)
+        public void DeleteMovie(int id)
         {
             string sql = "DELETE FROM movie WHERE ID = @Id;";
             con.sqlCommand(sql, new { Id = id }, connectionString);
@@ -35,7 +35,7 @@ namespace backend
             return con.loadDB<Movie, object>(sql, null, connectionString);
         }
 
-        public void UpdateFood(Movie movie)
+        public void UpdateMovie(Movie movie)
         {
             string sql = "UPDATE movie SET title = @title, genre = @genre, iscompleted = @iscompleted WHERE ID = @Id;";
             con.sqlCommand(sql, new { movie.title, movie.genre, movie.isCompleted, movie.Id }, connectionString);

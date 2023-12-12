@@ -19,7 +19,7 @@ namespace Backend
             using (NpgsqlConnection conn = new NpgsqlConnection(connectionString))
             {
                 conn.Open();
-                return conn.Query<T>(sqlStatement, parameters).AsList();
+                return conn.Query<T>(sqlStatement, parameters).ToList();
             }
         }
 

@@ -9,5 +9,5 @@ RUN dotnet publish -c Release -o out
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/out ./
-EXPOSE 9988
+EXPOSE 7280
 CMD ["dotnet", "backend.dll"]

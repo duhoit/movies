@@ -11,5 +11,4 @@ namespace backend.Repository
         void Update(int id, T entity);
         void Delete(int id);
     }
-
 }
