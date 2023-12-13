@@ -1,72 +1,118 @@
+using backend.DTO;
+using backend.Repository;
 using Microsoft.AspNetCore.Mvc;
-using backend.Model;
-using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
-
-namespace backend.Controllers
+using System.Threading.Tasks;
+using backend.Model;
+[ApiController]
+[Route("api/movies")]
+public class MovieController : ControllerBase
 {
-   
-    [ApiController]
-    [Route("api/[controller]")]
-    public class MovieController : ControllerBase
+    private readonly IMovieRepository _movieRepository;
+
+    public MovieController(IMovieRepository movieRepository)
     {
-        private static List<Movie> movies = new List<Movie>();
-
-        [HttpGet]
-        public ActionResult<IEnumerable<Movie>> Get()
-        {
-            return Ok(movies);
-        }
-
-        [HttpGet("{id}")]
-        public ActionResult<Movie> Get(int id)
-        {
-            var movie = movies.Find(m => m.Id == id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-            return Ok(movie);
-        }
-
-        [HttpPost]
-        public ActionResult<Movie> Post([FromBody] Movie movie)
-        {
-            movie.Id = movies.Count + 1;
-            movies.Add(movie);
-            ActionResult<Movie> a = CreatedAtAction(nameof(Get), new { id = movie.Id }, movie);
-            Console.WriteLine(a);
-            return CreatedAtAction(nameof(Get), new { id = movie.Id }, movie);
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Movie updatedMovie)
-        {
-            var existingMovie = movies.Find(m => m.Id == id);
-            if (existingMovie == null)
-            {
-                return NotFound();
-            }
-
-            existingMovie.title = updatedMovie.title;
-            existingMovie.genre = updatedMovie.genre;
-            existingMovie.isCompleted = updatedMovie.isCompleted;
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            var movie = movies.Find(m => m.Id == id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-
-            movies.Remove(movie);
-            return NoContent();
-        }
+        _movieRepository = movieRepository ?? throw new ArgumentNullException(nameof(movieRepository));
     }
 
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<MovieDto>>> GetMovies()
+    {
+        var movies = await _movieRepository.GetAllMoviesAsync();
+        var movieDtos = MapMoviesToDtos(movies);
+        return Ok(movieDtos);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<MovieDto>> GetMovieById(int id)
+    {
+        var movie = await _movieRepository.GetMovieByIdAsync(id);
+
+        if (movie == null)
+        {
+            return NotFound();
+        }
+
+        var movieDto = MapMovieToDto(movie);
+        return Ok(movieDto);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<MovieDto>> AddMovie([FromBody] MovieDto movieDto)
+    {
+        if (movieDto == null)
+        {
+            return BadRequest("MovieDto is null");
+        }
+
+        var newMovieId = await _movieRepository.AddMovieAsync(MapDtoToMovie(movieDto));
+
+        // You can customize the response if needed
+        return CreatedAtAction(nameof(GetMovieById), new { id = newMovieId }, movieDto);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<ActionResult<MovieDto>> UpdateMovie(int id, [FromBody] MovieDto movieDto)
+    {
+        var existingMovie = await _movieRepository.GetMovieByIdAsync(id);
+
+        if (existingMovie == null)
+        {
+            return NotFound();
+        }
+
+        await _movieRepository.UpdateMovieAsync(id, MapDtoToMovie(movieDto));
+
+        // You can customize the response if needed
+        return Ok(movieDto);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteMovie(int id)
+    {
+        var existingMovie = await _movieRepository.GetMovieByIdAsync(id);
+
+        if (existingMovie == null)
+        {
+            return NotFound();
+        }
+
+        await _movieRepository.DeleteMovieAsync(id);
+
+        // You can customize the response if needed
+        return NoContent();
+    }
+
+    private MovieDto MapMovieToDto(Movie movie)
+    {
+        return new MovieDto
+        {
+            Id = movie.Id,
+            Title = movie.title,
+            IsCompleted = movie.isCompleted,
+            Genre = movie.genre
+        };
+    }
+
+    private IEnumerable<MovieDto> MapMoviesToDtos(IEnumerable<Movie> movies)
+    {
+        var movieDtos = new List<MovieDto>();
+        foreach (var movie in movies)
+        {
+            movieDtos.Add(MapMovieToDto(movie));
+        }
+        return movieDtos;
+    }
+
+    private Movie MapDtoToMovie(MovieDto movieDto)
+    {
+        return new Movie
+        {
+            Id = movieDto.Id,
+            title = movieDto.Title,
+            isCompleted = movieDto.IsCompleted,
+            genre = movieDto.Genre
+        };
+    }
 }

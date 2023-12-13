@@ -14,7 +14,7 @@ namespace Backend
             this.connectionString = connectionString;
         }
 
-        public List<T> loadDB<T, U>(string sqlStatement, U parameters, string connectionString)
+        public List<T> loadFromDB<T, U>(string sqlStatement, U parameters, string connectionString)
         {
             using (NpgsqlConnection conn = new NpgsqlConnection(connectionString))
             {

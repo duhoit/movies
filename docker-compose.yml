@@ -15,10 +15,10 @@ services:
     build:
       context: ./backend
     environment:
-      - DB_HOST=backend
-      - DB_CONNECTION_STRING=Host=postgres;Port=5432;Database=movies;Username=postgres;Password=Countdown10
+      - DB_HOST=postgres
+      #- DB_CONNECTION_STRING=Host=postgres;Port=5432;Database=movies;Username=postgres;Password=Countdown10
 
-      #- DB_CONNECTION_STRING=postgres://psqlman:Countdown10@postgres:5432/movies
+      - DB_CONNECTION_STRING=postgres://postgres:Countdown10@postgres:5432/movies
     ports:
       - "7280:7280"
     networks:
