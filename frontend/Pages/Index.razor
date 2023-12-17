@@ -1,85 +1,89 @@
-﻿@* @page "/"
-@using frontend.ApiConnection
-@using frontend.Data
+﻿@using frontend.Data
+@using frontend.Classes
+@inject NavigationManager NavigationManager
+@using System.Reflection.Metadata.Ecma335
+@page "/"
 
-<PageTitle>Index</PageTitle>
+<h3>Movies</h3>
 
-<h1>Movies</h1>
-
-My movies watchlist.
-
-<SurveyPrompt Title="I hope this works" />
-
-@if (movies != null)
-{
-    @foreach (movie m in movies)
-    {
-        <div>
-            @m.title
-        </div>
-    }
-}
-else
+@if (movies == null)
 {
     <p>Loading...</p>
 }
-
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Is Completed</th>
+                <th>Genre</th>
+                <th>
+                    <button @onclick="CreateMovie">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var movie in movies)
+            {
+                <tr>
+                    <td>@movie.title</td>
+                    <td>@movie.isCompleted</td>
+                    <td>@movie.genre</td>
+                     <td>
+                        <button @onclick="() => Update(movie.id)">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                    <td>
+                        <button @onclick="() => DeleteMovie(movie.id)">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 @code {
-    private List<movie>? movies;
-
-    protected override void OnInitialized()
+    private List<movie> movies;
+    ApiConnection con = new();
+    protected override async Task OnInitializedAsync()
     {
-        base.OnInitialized();
-        GetMovieData();
+        GetAllMovies();
     }
-
-    private async void GetMovieData()
-    {
-        try
+    protected async void GetAllMovies(){
+         try
         {
-            api handler = new();
-            movies = await handler.GetMovies();
+            var apiConnection = new ApiConnection();
+            Console.WriteLine($"Fetching movies from: {ApiConnection.Url}");
+            movies = await apiConnection.GetAllMovies();
+            Console.WriteLine("Movies retrieved successfully:", movies);
             StateHasChanged();
         }
         catch (Exception ex)
         {
-            // Handle the exception, e.g., log it or show an error message
-            Console.WriteLine($"Error fetching movie data: {ex.Message}");
+            // Handle error (log, display a message, etc.)
+            Console.WriteLine($"Error fetching movies: {ex.Message}");
         }
     }
-} *@
-@page "/"
-@using System.Reflection.Metadata.Ecma335
-@using frontend.ApiConnection
-@using frontend.Data
 
-<PageTitle>Index</PageTitle>
-<h1>Movies</h1>
-
-My movies watchlist.
-
-<SurveyPrompt Title="I hope this works" />
-
-@foreach (movie m in list)
-{
-    <div>
-        @m.title
-    </div>
-}
-
-@code
-{
-    List<movie> list = new();
-    protected override void OnInitialized()
+     void CreateMovie()
     {
-        base.OnInitialized();
-        GetMovies();
+        int newId = movies.Count > 0 ? movies.Max(item => item.id) + 1 : 1;
+        NavigationManager.NavigateTo($"/create/{newId}");
+    }
+    async void DeleteMovie(int itemId)
+    {
+        if(await con.DeleteMovie(itemId)) GetAllMovies();
+        Console.WriteLine($"Delete item with ID: {itemId}");
     }
 
-    private async void GetMovies()
+    void Update(int itemId)
     {
-        api handler = new();
-        list= await handler.GetMovies();
-        StateHasChanged();
+        Console.WriteLine($"Edit item with ID: {itemId}");
+        NavigationManager.NavigateTo($"/update/{itemId}");
     }
 }

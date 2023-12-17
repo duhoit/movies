@@ -1,10 +1,9 @@
-namespace backend.DTO
+namespace frontend.DTO
 {
     public class MovieDto
-    {
-        public int Id { get; set; }
+    {   public int id { get; set; }
         public string title { get; set; }
-        public bool isCompleted { get; set; }
+        public int isCompleted{ get; set; }
         public string genre { get; set; }
     }
 }

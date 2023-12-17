@@ -1,0 +1,54 @@
+<!-- Update.razor -->
+@page "/update/{Id:int}"
+@inject NavigationManager NavigationManager
+@using frontend.Classes
+@using frontend.Data
+
+<PageTitle>Update Movie</PageTitle>
+
+<div class="form">
+    <h3>Update Movie</h3>
+
+    <div class="form-group">
+        <label for="title">Titel:</label>
+        <input id="title" @bind="Movie.title" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="isCompleted">Completed:</label>
+        <input id="isCompleted" @bind="Movie.isCompleted" type="checkbox" class="form-check-input" />
+    </div>
+
+    <div class="form-group">
+        <label for="genre">Genre:</label>
+        <textarea id="genre" @bind="Movie.genre" class="form-control"></textarea>
+    </div>
+
+    <button @onclick="UpdateItem" class="btn btn-primary">Save</button>
+</div>
+
+@code
+{
+    movie Movie = new();
+
+    [Parameter]
+    public int Id { get; set; }
+
+    ApiConnection handler = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Movie = await handler.GetMovieById(Id);
+        if (Movie == null)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+    async void UpdateItem()
+    {
+        if (Movie.genre == null) Movie.genre = "";
+        await handler.UpdateMovie(Id, Movie);
+        NavigationManager.NavigateTo("/");
+    }
+}

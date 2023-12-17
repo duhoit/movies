@@ -89,9 +89,9 @@ public class MovieController : ControllerBase
         return new MovieDto
         {
             Id = movie.Id,
-            Title = movie.title,
-            IsCompleted = movie.isCompleted,
-            Genre = movie.genre
+            title = movie.title,
+            isCompleted = movie.isCompleted,
+            genre = movie.genre
         };
     }
 
@@ -110,9 +110,9 @@ public class MovieController : ControllerBase
         return new Movie
         {
             Id = movieDto.Id,
-            title = movieDto.Title,
-            isCompleted = movieDto.IsCompleted,
-            genre = movieDto.Genre
+            title = movieDto.title,
+            isCompleted = movieDto.isCompleted,
+            genre = movieDto.genre
         };
     }
 }
