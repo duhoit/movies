@@ -12,6 +12,5 @@ namespace backend.Repository
         Task<bool> UpdateMovieAsync(int id, Movie movie);
         Task<bool> DeleteMovieAsync(int id);
 
-        // Add other CRUD methods as needed
     }
 }

@@ -65,7 +65,5 @@ namespace backend.Repository
                 return affectedRows > 0;
             }
         }
-
-        // Add other CRUD methods as needed
     }
 }

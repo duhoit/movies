@@ -6,7 +6,7 @@ namespace frontend.Classes
 {
     public class ApiConnection
     {
-        public const string Url = "https://localhost:7280";
+        public const string Url = "https://backend:7280";
 
         public async Task<List<movie>> GetAllMovies()
         {

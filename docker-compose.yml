@@ -15,9 +15,9 @@ services:
     build:
       context: ./backend
     environment:
+      #ASPNETCORE_ENVIRONMENT: Development
       - DB_HOST=postgres
-      #- DB_CONNECTION_STRING=Host=postgres;Port=5432;Database=movies;Username=postgres;Password=Countdown10
-
+      # #- DB_CONNECTION_STRING=Host=postgres;Port=5432;Database=movies;Username=postgres;Password=Countdown10
       - DB_CONNECTION_STRING=postgres://postgres:Countdown10@postgres:5432/movies
     ports:
       - "7280:7280"

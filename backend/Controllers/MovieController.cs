@@ -48,7 +48,6 @@ public class MovieController : ControllerBase
 
         var newMovieId = await _movieRepository.AddMovieAsync(MapDtoToMovie(movieDto));
 
-        // You can customize the response if needed
         return CreatedAtAction(nameof(GetMovieById), new { id = newMovieId }, movieDto);
     }
 
@@ -64,7 +63,6 @@ public class MovieController : ControllerBase
 
         await _movieRepository.UpdateMovieAsync(id, MapDtoToMovie(movieDto));
 
-        // You can customize the response if needed
         return Ok(movieDto);
     }
 
@@ -80,7 +78,6 @@ public class MovieController : ControllerBase
 
         await _movieRepository.DeleteMovieAsync(id);
 
-        // You can customize the response if needed
         return NoContent();
     }
 
